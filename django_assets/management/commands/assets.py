@@ -26,7 +26,6 @@ from os import path
 import logging
 from optparse import make_option
 from django.conf import settings
-from django.core.management import LaxOptionParser
 from django.core.management.base import BaseCommand, CommandError
 
 from webassets.script import (CommandError as AssetCommandError,
@@ -43,18 +42,7 @@ class Command(BaseCommand):
     )
     help = 'Manage assets.'
     args = 'subcommand'
-    requires_model_validation = False
-
-    def create_parser(self, prog_name, subcommand):
-        # Overwrite parser creation with a LaxOptionParser that will
-        # ignore arguments it doesn't know, allowing us to pass those
-        # along to the webassets command.
-        # Hooking into run_from_argv() would be another thing to try
-        # if this turns out to be problematic.
-        return LaxOptionParser(prog=prog_name,
-            usage=self.usage(subcommand),
-            version=self.get_version(),
-            option_list=self.option_list)
+    requires_system_checks = False
 
     def handle(self, *args, **options):
         # Due to the use of LaxOptionParser ``args`` now contains all
